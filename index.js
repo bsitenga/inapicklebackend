@@ -33,7 +33,7 @@ app.get('/rooms', function (req, res) {
 app.post('/roomcreator', function (req, res) {
     const roomCode = req.body.roomCode;
     const creator = req.body.creator;
-    const joiner = "";
+    const joiner = "NOJOIN";
     const creatorPreferences = [];
     const joinerPreferences = [];
     const restaurants = [];
@@ -49,7 +49,7 @@ app.post('/roomcreator', function (req, res) {
     })
 
     newRoom.save()
-        .then(() => res.json('Preferences added!'))
+        .then(() => res.json('Room created!'))
         .catch(err => res.status(400).json('Error: ' + err));
 })
 
