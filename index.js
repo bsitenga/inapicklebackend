@@ -59,45 +59,60 @@ app.post('/roomcreator', function (req, res) {
 app.post('/roomjoiner', function (req, res) {
     const joiner = req.body.joiner;
     const roomCode = req.body.roomCode;
-    const query = Rooms.findOne(function(err, allRooms) {
+    const query = Rooms.findOne(function (err, allRooms) {
         if (err) return handleError(err);
         if (allRooms) {
-            Rooms.findOneAndUpdate({roomCode: roomCode}, {
+            Rooms.findOneAndUpdate({ roomCode: roomCode }, {
                 joiner: joiner
-            }, function() {
+            }, function () {
                 return res.json("Room updated");
             })
         }
     })
 })
 
-app.post('/restaurants', function(req, res) {
+app.post('/restaurants', function (req, res) {
     const restaurants = req.body.restaurants;
     const roomCode = req.body.roomCode;
-    const query = Rooms.findOne(function(err, allRooms) {
+    const query = Rooms.findOne(function (err, allRooms) {
         if (err) return handleError(err);
         if (allRooms) {
-            Rooms.findOneAndUpdate({roomCode: roomCode}, {
+            Rooms.findOneAndUpdate({ roomCode: roomCode }, {
                 restaurants: restaurants
-            }, function() {
+            }, function () {
                 return res.json("Restaurants added");
             })
         }
     })
 })
 
-app.post('/preferences', function(req, res) {
+app.post('/preferences', function (req, res) {
     const roomCode = req.body.roomCode;
     const restaurantName = req.body.restaurantName;
     const userType = req.body.userType;
+    console.log(req.body);
     if (userType === "creator") {
-        Rooms.updateOne({roomCode: roomCode},
-            {$push: {creatorPreferences: restaurantName}})
+        Rooms.findOneAndUpdate({ roomCode: roomCode },
+            { $push: { creatorPreferences: restaurantName } },
+            function (error, success) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log(success);
+                }
+            })
     } else if (userType === "joiner") {
-        Rooms.updateOne({roomCode:roomCode},
-            {$push: {joinerPreferences: restaurantName}})
+        Rooms.findOneAndUpdate({ roomCode: roomCode },
+            { $push: { joinerPreferences: restaurantName } },
+            function (error, success) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log(success);
+                }
+            })
     }
-    
+
 })
 
 // Catchall for any request that doesn't
