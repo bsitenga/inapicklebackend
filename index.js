@@ -69,27 +69,35 @@ app.post('/roomjoiner', function (req, res) {
             })
         }
     })
+})
 
-    // Rooms.updateOne({roomCode: roomCode}, {
-    //     joiner: joiner
-    // }, function(err, result) {
-    //     if (err)
-    //         console.log(err);
-    //     else
-    //         console.log(result);
-    // })
-    // console.log(req.body)
-    // const query = Rooms.where({ roomCode: roomCode });
-    // query.findOneAndUpdate(function (err, joinedRoom) {
-    //     if (err) return handleError(err);
-    //     if (joinedRoom) {
-    //         Rooms.findOneAndUpdate({ roomCode: roomCode }, {
-    //             joiner: joiner
-    //         })
-    //     }
-    // }, function () {
-    //     return res.json("Joiner is in!")
-    // })
+app.post('/restaurants', function(req, res) {
+    const restaurants = req.body.restaurants;
+    const roomCode = req.body.roomCode;
+    const query = Rooms.findOne(function(err, allRooms) {
+        if (err) return handleError(err);
+        if (allRooms) {
+            Rooms.findOneAndUpdate({roomCode: roomCode}, {
+                restaurants: restaurants
+            }, function() {
+                return res.json("Restaurants added");
+            })
+        }
+    })
+})
+
+app.post('/preferences', function(req, res) {
+    const roomCode = req.body.roomCode;
+    const restaurantName = req.body.restaurantName;
+    const userType = req.body.userType;
+    if (userType === "creator") {
+        Rooms.updateOne({roomCode: roomCode},
+            {$push: {creatorPreferences: restaurantName}})
+    } else if (userType === "joiner") {
+        Rooms.updateOne({roomCode:roomCode},
+            {$push: {joinerPreferences: restaurantName}})
+    }
+    
 })
 
 // Catchall for any request that doesn't
