@@ -24,7 +24,7 @@ app.get('/', function (req, res) {
 
 //Get all summary data
 app.get('/rooms', function (req, res) {
-    Rooms.findOne({roomCode: req.body.roomCode}, function(err, room) {
+    Rooms.find(function(err, room) {
         if (err) return handleError(err);
         res.json(room);
     })
