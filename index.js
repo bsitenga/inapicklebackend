@@ -24,9 +24,11 @@ app.get('/', function (req, res) {
 
 //Get all summary data
 app.get('/rooms', function (req, res) {
-    Rooms.find()
-        .then(rooms => res.json(rooms))
-        .catch(err => res.status(400).json("Error: " + err))
+    Rooms.findOne({roomCode: req.body.roomCode}, function(err, room) {
+        if (err) return handleError(err);
+        res.json(room);
+    })
+    .catch(err => console.log(err))
 })
 
 //Adds one user's preferences to the db
