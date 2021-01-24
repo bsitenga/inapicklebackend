@@ -24,11 +24,11 @@ app.get('/', function (req, res) {
 
 //Get all summary data
 app.get('/rooms', function (req, res) {
-    Rooms.find(function(err, room) {
+    Rooms.find(function (err, room) {
         if (err) return handleError(err);
         res.json(room);
     })
-    .catch(err => console.log(err))
+        .catch(err => console.log(err))
 })
 
 //Adds one user's preferences to the db
@@ -59,24 +59,37 @@ app.post('/roomcreator', function (req, res) {
 app.post('/roomjoiner', function (req, res) {
     const joiner = req.body.joiner;
     const roomCode = req.body.roomCode;
-
-    const query = Rooms.where({ roomCode: roomCode });
-    query.findOne(function (err, joinedRoom) {
+    const query = Rooms.findOne(function(err, allRooms) {
         if (err) return handleError(err);
-        if (joinedRoom) {
-            Rooms.findOneAndUpdate({ roomCode: roomCode }, {
-                roomCode: roomCode,
-                creator: joinedRoom.creator,
-                joiner: joiner,
-                creatorPreferences: joinedRoom.creatorPreferences,
-                joinerPreferences: joinedRoom.joinerPreferences,
-                restaurants: joinedRoom.restaurants,
-                start: joinedRoom.start
+        if (allRooms) {
+            Rooms.findOneAndUpdate({roomCode: roomCode}, {
+                joiner: joiner
+            }, function() {
+                return res.json("Room updated");
             })
         }
-    }, function() {
-        return res.json("Joiner is in!")
     })
+
+    // Rooms.updateOne({roomCode: roomCode}, {
+    //     joiner: joiner
+    // }, function(err, result) {
+    //     if (err)
+    //         console.log(err);
+    //     else
+    //         console.log(result);
+    // })
+    // console.log(req.body)
+    // const query = Rooms.where({ roomCode: roomCode });
+    // query.findOneAndUpdate(function (err, joinedRoom) {
+    //     if (err) return handleError(err);
+    //     if (joinedRoom) {
+    //         Rooms.findOneAndUpdate({ roomCode: roomCode }, {
+    //             joiner: joiner
+    //         })
+    //     }
+    // }, function () {
+    //     return res.json("Joiner is in!")
+    // })
 })
 
 // Catchall for any request that doesn't
