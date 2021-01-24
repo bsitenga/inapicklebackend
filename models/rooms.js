@@ -16,7 +16,7 @@ const roomSchema = new Schema({
         required: true,
     },
     creatorPreferences: {
-        type: String,
+        type: Array,
         required: true,
     },
     joinerPreferences: {
